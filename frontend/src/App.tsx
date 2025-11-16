@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.tsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { LoginForm } from './components/auth/LoginForm';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { NoteProvider } from './contexts/NoteContext';
+import NotesList from './components/NotesList';
+import AddNote from './components/AddNote';
 
-function App() {
-  const [count, setCount] = useState(0)
+function AppContent() {
+  const { isAuthenticated } = useAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <NoteProvider>
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-8">Note Taking App</h1>
+          <Routes>
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />} />
+            <Route element={<ProtectedRoute />}>
+              <Route
+                path="/"
+                element={
+                  <div className="space-y-8">
+                    <AddNote />
+                    <NotesList />
+                  </div>
+                }
+              />
+            </Route>
+          </Routes>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </NoteProvider>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
+  );
+}
+
+export default App;

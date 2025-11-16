@@ -1,0 +1,60 @@
+// src/contexts/AuthContext.tsx
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { User, AuthContextType } from '../types/auth';
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // For demo purposes, accept any non-empty email/password
+      if (email && password) {
+        const mockUser: User = {
+          id: '1',
+          email,
+          name: email.split('@')[0], // Use part before @ as name
+        };
+        setUser(mockUser);
+        return { success: true };
+      }
+      return { success: false, error: 'Invalid email or password' };
+    } catch (error) {
+      return { success: false, error: 'Login failed' };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isAuthenticated: !!user,
+        loading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

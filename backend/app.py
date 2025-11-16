@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, abort
 from store import NoteStore
+from validation import validate_note_data
 
 app = Flask(__name__)
 store = NoteStore()
@@ -7,8 +8,13 @@ store = NoteStore()
 @app.route("/notes", methods=["POST"])
 def create_note():
     data = request.get_json() or {}
-    if "title" not in data or "body" not in data:
-        abort(400, "title and body required")
+    
+    # Validate input
+    is_valid, error_message = validate_note_data(data, store)
+    if not is_valid:
+        return jsonify({"message": error_message}), 400
+    
+    # Create note
     note = store.create_note(data["title"], data["body"]) 
     return jsonify({"id": note.id, "title": note.title, "body": note.body}), 201
 
@@ -25,6 +31,12 @@ def note_detail(nid):
         return jsonify(note.__dict__)
     if request.method == "PUT":
         data = request.json or {}
+        
+        # Validate input
+        is_valid, error_message = validate_note_data(data, store)
+        if not is_valid:
+            return jsonify({"message": error_message}), 400
+        
         note = store.update_note(nid, data.get("title",""), data.get("body",""))
         if not note: abort(404)
         return jsonify(note.__dict__)
