@@ -1,0 +1,23 @@
+{
+  "extends": "@playwright/test/tsconfig",
+  "compilerOptions": {
+    "outDir": "../dist/out-tsc",
+    "module": "commonjs",
+    "target": "ES2022",
+    "lib": ["es2022", "dom"],
+    "types": ["node", "@playwright/test", "@playwright/test/types/expect"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.spec.tsx",
+    "**/*.test.tsx",
+    "**/e2e/**/*.ts",
+    "**/tests/**/*.ts",
+    "**/playwright.config.ts"
+  ]
+}
