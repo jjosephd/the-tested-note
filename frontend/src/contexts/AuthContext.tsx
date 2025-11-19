@@ -1,5 +1,5 @@
 // src/contexts/AuthContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import type {ReactNode} from 'react'
 import type { User, AuthContextType } from '../types/auth';
 

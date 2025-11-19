@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { validateLogin } from '../../utils/validators';
-import type { FormErrors } from '../../utils/validators';
-import { required, minLength, email } from '../../utils/validators';  
+
+
 
 type LoginFormData = {
   email: string;
@@ -16,10 +16,23 @@ export const LoginForm = () => {
     email: '',
     password: '',
   });
-  const [errors, setErrors] = useState<FormErrors<LoginFormData>>({});
+  const [touched, setTouched] = useState<Record<keyof LoginFormData, boolean>>({
+    email: false,
+    password: false,
+  });
+  const [focused, setFocused] = useState<Record<keyof LoginFormData, boolean>>({
+    email: false,
+    password: false,
+  });
+  
   const [formError, setFormError] = useState('');
   const { login, loading } = useAuth();
   const navigate = useNavigate();
+
+  // Derived state: calculate errors on every render
+  const validation = validateLogin(formData);
+  const errors = validation.errors;
+  const isFormValid = validation.isValid;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -27,28 +40,39 @@ export const LoginForm = () => {
       ...prev,
       [id]: value,
     }));
-    // Clear error when user starts typing
-    if (errors[id as keyof LoginFormData]) {
-      setErrors(prev => ({
-        ...prev,
-        [id]: '',
-      }));
-    }
+  };
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { id } = e.target;
+    setFocused(prev => ({
+      ...prev,
+      [id]: true,
+    }));
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { id } = e.target;
+    setFocused(prev => ({
+      ...prev,
+      [id]: false,
+    }));
+    setTouched(prev => ({
+      ...prev,
+      [id]: true,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
 
-    // Validate form
-    const validation = validateLogin(formData);
-    setErrors(validation.errors);
-    console.log('Validation errors:', validation.errors);
-    console.log('Current errors state:', errors);
+    // Mark all as touched on submit attempt
+    setTouched({
+      email: true,
+      password: true,
+    });
 
-
-    if (!validation.isValid) {
-      console.log(validation.errors);
+    if (!isFormValid) {
       return;
     }
 
@@ -58,6 +82,16 @@ export const LoginForm = () => {
     } else {
       setFormError(error || 'Login failed');
     }
+  };
+
+  // Helper to determine if we should show error for a field
+  const shouldShowError = (field: keyof LoginFormData) => {
+    const hasError = !!errors[field];
+    const isFocused = focused[field];
+    const isTouched = touched[field];
+    
+    // Show error if it exists AND (it's focused OR it's been touched)
+    return hasError && (isFocused || isTouched);
   };
 
   return (
@@ -79,12 +113,14 @@ export const LoginForm = () => {
             type="email"
             value={formData.email}
             onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 ${
-              errors.email ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+              shouldShowError('email') ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
             }`}
             data-testid="email-input"
           />
-          {errors.email && (
+          {shouldShowError('email') && (
             <p className="mt-1 text-sm text-red-600">{errors.email}</p>
           )}
         </div>
@@ -100,20 +136,22 @@ export const LoginForm = () => {
             type="password"
             value={formData.password}
             onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 ${
-              errors.password ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+              shouldShowError('password') ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
             }`}
             data-testid="password-input"
           />
-          {errors.password && (
+          {shouldShowError('password') && (
             <p className="mt-1 text-sm text-red-600">{errors.password}</p>
           )}
         </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !isFormValid}
           name="login-button"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           data-testid="login-button"
         >
           {loading ? 'Logging in...' : 'Login'}

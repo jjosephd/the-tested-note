@@ -132,7 +132,7 @@ test.describe('LoginForm component', () => {
     // 5. --- Assertions ---
     // The previous screenshot step is commented out, as it should no longer be needed
     // to debug this particular issue once the fix is applied.
-    await page.screenshot({ path: 'empty_pass_debug_FIXED.png' });
+    await page.screenshot({ path: 'empty_pass_debug.png' });
 
     // 6. Refined Assertion: Locate the password input's parent/sibling element
     // that contains the specific error message text. This avoids confusion
