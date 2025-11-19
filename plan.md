@@ -31,10 +31,10 @@
   - [x] Initialize new project
   - [x] Run sample test
   - [x] Configure basic test scripts
-- [ ] Write and run 3 basic tests:
-  - [x] Page title verification
-  - [x] Element visibility check
-  - [x] Basic form interaction
+- [x] Write and run 3 basic tests:
+  - [x] Page title verification (`pageTitle.spec.ts`)
+  - [x] Element visibility check (`loginInputValidation.spec.ts`)
+  - [x] Basic form interaction (`addNote.spec.ts`)
 
 **Deliverable:** Screenshot of 3 passing tests
 
@@ -83,10 +83,10 @@
   - [ ] Use proper bug report template
   - [ ] Include screenshots
   - [ ] Set appropriate priority/severity
-- [ ] Write 10 test cases for a login form:
-  - [ ] 3 positive scenarios
-  - [ ] 4 negative scenarios
-  - [ ] 3 edge cases
+- [x] Write 10 test cases for a login form:
+  - [x] 3 positive scenarios (Valid login)
+  - [x] 4 negative scenarios (Invalid email, invalid password)
+  - [x] 3 edge cases (Empty fields, disabled buttons)
 
 **Deliverable:** Jira bug report PDF + test case spreadsheet
 
@@ -105,10 +105,11 @@
   - [ ] Browser contexts
   - [ ] Auto-waiting mechanisms
   - [ ] Network handling
-- [ ] Practice different selector strategies:
+- [x] Practice different selector strategies:
   - [ ] CSS selectors
   - [ ] XPath expressions
-  - [ ] Text-based selectors
+  - [x] Text-based selectors
+  - [x] **Best Practice:** `data-testid` usage (Implemented)
 - [ ] Research selector stability:
   - [ ] Document pros/cons of different selector types
   - [ ] Create a selector strategy guide
@@ -117,14 +118,16 @@
 
 ##### Introduction to Page Object Model (POM)
 
+> [!IMPORTANT]
+> **CRITICAL STEP:** Your current tests (`loginInputValidation.spec.ts`, `addNote.spec.ts`) are growing. It is time to refactor them using POM to avoid code duplication.
+
 - [ ] Study POM principles:
   - [ ] Single Responsibility Principle
   - [ ] DRY (Don't Repeat Yourself)
   - [ ] Separation of concerns
 - [ ] Design component-level POMs:
-  - [ ] Button component
-  - [ ] Modal component
-  - [ ] Dropdown component
+  - [ ] `LoginPage` (Encapsulate login actions)
+  - [ ] `NotePage` (Encapsulate add/delete/view note actions)
 - [ ] Practice identifying patterns:
   - [ ] List common UI patterns in your tests
   - [ ] Mark candidates for extraction
@@ -132,30 +135,25 @@
 
 **Wednesday–Friday: Hands-On**
 
-- [ ] Set up test project for TodoMVC:
-  - [ ] Initialize test directory
-  - [ ] Configure base URL
-  - [ ] Set up test hooks
-- [ ] Implement 15 Playwright tests:
-  - [ ] Todo Management (5 tests):
-    - [ ] Add new todo
-    - [ ] Delete todo
-    - [ ] Edit existing todo
-    - [ ] Mark todo as complete
-    - [ ] Clear completed todos
-  - [ ] Filtering (3 tests):
-    - [ ] Filter active todos
-    - [ ] Filter completed todos
-    - [ ] Show all todos
-  - [ ] Counter (3 tests):
-    - [ ] Initial counter (0)
-    - [ ] Counter after adding todos
-    - [ ] Counter after completing todos
-  - [ ] Persistence (4 tests):
+- [x] Set up test project for **Note App** (Replaced TodoMVC):
+  - [x] Initialize test directory
+  - [x] Configure base URL
+  - [x] Set up test hooks
+- [ ] Implement 15 Playwright tests (In Progress):
+  - [x] Note Management:
+    - [x] Add new note (`addNote.spec.ts`)
+    - [x] Delete note (`deleteNote.spec.ts`)
+    - [ ] Edit existing note
+    - [x] View all notes (`viewAllNotes.spec.ts`)
+  - [ ] Filtering/Search (If applicable to Note App):
+    - [ ] Search for notes
+    - [ ] Filter by category
+  - [ ] Advanced Assertions:
+    - [x] Custom Matchers (Implemented `toHaveAccessibleErrorMessage`)
+    - [ ] Soft assertions
+  - [ ] Persistence:
     - [ ] Persist after refresh
     - [ ] Persist after browser close
-    - [ ] Maintain filter state
-    - [ ] Maintain todo status
 
 **Deliverable:** GitHub repo with test suite + README
 
@@ -290,7 +288,7 @@
 
 **December 29, 2025 – March 8, 2026**
 
-### Week 7: Dec 29–Jan 4 | Project Kickoff – Pet Adoption Dashboard
+### Week 7: Dec 29–Jan 4 | Project Kickoff – Note App (Continued)
 
 **Focus:** Understanding requirements
 
