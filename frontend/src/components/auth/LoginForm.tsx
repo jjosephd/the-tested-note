@@ -43,8 +43,12 @@ export const LoginForm = () => {
     // Validate form
     const validation = validateLogin(formData);
     setErrors(validation.errors);
+    console.log('Validation errors:', validation.errors);
+    console.log('Current errors state:', errors);
+
 
     if (!validation.isValid) {
+      console.log(validation.errors);
       return;
     }
 

@@ -1,0 +1,14 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - heading "Login" [level=2] [ref=e4]
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - text: Email
+      - textbox "Email" [active] [ref=e7]: test_user_123
+    - generic [ref=e8]:
+      - text: Password
+      - textbox "Password" [ref=e9]
+    - button "Login" [ref=e10] [cursor=pointer]
+```

@@ -1,6 +1,6 @@
 // Validation rules
 export const required = (value: string) => ({
-  isValid: !!value.trim(),
+  isValid: value !== undefined && value !== null && value.trim() !== '',
   error: 'This field is required',
 });
 
@@ -39,10 +39,24 @@ export const validateForm = <T extends Record<string, any>>(
   };
 
   rules.forEach(({ validate, field }) => {
-    const { isValid, error } = validate(String(values[field] || ''));
-    if (!isValid) {
-      result.isValid = false;
-      result.errors[field] = error;
+    const value = values[field] ?? '';
+    // Only run validation if we don't already have an error for this field
+    if (result.errors[field as keyof T] === undefined) {
+      try {
+        // The fix: Wrap the validation call in try/catch to prevent a crash from halting the loop
+        const { isValid, error } = validate(String(value));
+        
+        if (!isValid) {
+          result.isValid = false;
+          result.errors[field] = error;
+        }
+      } catch (e) {
+        // Log the error but allow the validation loop to continue to the next field/rule
+        console.error(`Validator crashed for field ${String(field)}:`, e);
+        // You can optionally assign a generic error here if a validator fails unexpectedly
+        result.isValid = false;
+        result.errors[field] = 'Internal validation error.';
+      }
     }
   });
 
@@ -63,9 +77,9 @@ export const validateLogin = (values: { email: string; password: string }) => {
     { 
       validate: minLength(6), 
       field: 'password' 
-    },
+    }
   ];
-
+  
   return validateForm(values, rules);
 };
 
