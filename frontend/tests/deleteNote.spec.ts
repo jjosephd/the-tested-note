@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { beforeEach } from './constants';
 
 // data constants
 const NOTE_TITLE = 'My First Note';

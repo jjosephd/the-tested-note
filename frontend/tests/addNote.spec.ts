@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('AddNote Component', () => {
-  test.only('should allow creating a new note', async ({ page }) => {
+  test('should allow creating a new note', async ({ page }) => {
     const createNotePage = new CreateNotePage(page);
 
     await createNotePage.handleFillNote(NOTE_TITLE, NOTE_CONTENT); // fill note

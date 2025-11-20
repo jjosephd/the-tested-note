@@ -1,4 +1,3 @@
-import { test, expect } from '@playwright/test';
 import type { Page, Locator } from '@playwright/test';
 
 const LOGIN_PAGE: string = '/login';
