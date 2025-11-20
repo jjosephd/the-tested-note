@@ -2,30 +2,11 @@
 
 import { useAuth } from './contexts/AuthContext';
 import { LoginForm } from './components/auth/LoginForm';
+import { RegistrationPage } from './components/auth/RegistrationPage';
+import { ForgotPasswordPage } from './components/auth/ForgotPasswordPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
-import NotesList from './components/NotesList';
-import AddNote from './components/AddNote';
+import { DashboardPage } from './components/DashboardPage';
 import { Routes, Route, Navigate } from 'react-router-dom';
-
-export function AppContent() {
-  const { isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Note Taking App
-        </h1>
-        <AddNote />
-        <NotesList />
-      </div>
-    </div>
-  );
-}
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -36,8 +17,16 @@ function App() {
         path="/login"
         element={isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />}
       />
+      <Route
+        path="/register"
+        element={isAuthenticated ? <Navigate to="/" replace /> : <RegistrationPage />}
+      />
+      <Route
+        path="/forgot-password"
+        element={isAuthenticated ? <Navigate to="/" replace /> : <ForgotPasswordPage />}
+      />
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<AppContent />} />
+        <Route path="/" element={<DashboardPage />} />
       </Route>
     </Routes>
   );
