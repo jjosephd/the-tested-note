@@ -6,7 +6,6 @@ import { LoginPage } from '../pages/auth/login.page';
 const NAV_LINK = 'http://localhost:5173/login'; // default login component
 const LOGIN_EMAIL = 'test_user_123@aol.com';
 const LOGIN_PASSWORD = 'testpassword$21';
-const MIN_PASS_LENGTH = 6;
 
 const EMPTY_EMAIL = '';
 const EMPTY_PASSWORD = '';
@@ -32,7 +31,7 @@ test.describe('LoginForm component', () => {
    * Assert: verify successful login and navigation to NAV_LINK
    */
 
-  test.only('Should allow user login based on valid credentials', async ({
+  test('Should allow user login based on valid credentials', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);

@@ -6,7 +6,10 @@ import type { User, AuthContextType } from '../types/auth';
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
   const [loading, setLoading] = useState(false);
 
   const login = async (email: string, password: string) => {
@@ -23,6 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           name: email.split('@')[0], // Use part before @ as name
         };
         setUser(mockUser);
+        localStorage.setItem('user', JSON.stringify(mockUser));
         return { success: true };
       }
       return { success: false, error: 'Invalid email or password' };
@@ -35,6 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem('user');
   };
 
   return (

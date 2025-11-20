@@ -4,11 +4,12 @@ import { beforeEach } from './constants';
 // data constants
 const NOTE_TITLE = 'My First Note';
 const NOTE_CONTENT = 'First note content';
-const NAVIGATION_LINK = '/';
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+});
 
 test.describe('DeleteNote function', () => {
-  beforeEach(NAVIGATION_LINK);
-
   test('should allow deleting a note', async ({ page }) => {
     //1. Fill in the note title
     await page.getByTestId('note-title').fill(NOTE_TITLE);
@@ -29,6 +30,6 @@ test.describe('DeleteNote function', () => {
     await noteItem.getByRole('button', { name: /delete note/i }).click();
 
     //6. Verify that the note is deleted
-    await expect(noteItem).not.toBeVisible();
+    await expect(noteItem).toBeHidden();
   });
 });
