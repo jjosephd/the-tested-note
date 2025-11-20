@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import type { Page, Locator } from '@playwright/test';
 
+const LOGIN_PAGE: string = '/';
+
 export class LoginPage {
   readonly emailInputField: Locator;
   readonly passwordInputField: Locator;
@@ -23,6 +25,10 @@ export class LoginPage {
 
   async clickLogin() {
     await this.loginButton.click();
+  }
+
+  async goto() {
+    await this.page.goto('/');
   }
 
   async handleLogin(email: string, password: string) {

@@ -26,6 +26,7 @@
     "@typescript-eslint/parser": "^8.46.4",
     "@vitejs/plugin-react": "^5.0.4",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.1",
     "eslint-plugin-playwright": "^2.3.0",
     "eslint-plugin-react-hooks": "^5.2.0",

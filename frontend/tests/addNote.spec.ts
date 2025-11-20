@@ -19,28 +19,34 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('AddNote Component', () => {
-  test.only('should alow adding a new note', async ({ page }) => {
+  test('should allow creating a new note', async ({ page }) => {
     const createNotePage = new CreateNotePage(page);
 
     await createNotePage.handleFillNote(NOTE_TITLE, NOTE_CONTENT); // fill note
 
-    /*1. Fill in the note title
-    await page.getByTestId('note-title').fill(NOTE_TITLE);
-
-    //2. Fill in the note content
-    await page.getByTestId('note-content').fill(NOTE_CONTENT);
-
-    // 3. Click the save button
-    await page.getByTestId('save-note').click();
-*/
-    // debugger
-
-    //4. Verify that the note is added
+    // Verify that the note is added
     const noteItem = page.getByTestId('note-item').first(); // start by storing to note item variable
     await expect(noteItem).toBeVisible(); // verify that the note is visible
     await expect(noteItem.getByText(NOTE_TITLE)).toBeVisible(); // verify that the note title is visible
     await expect(noteItem.getByText(NOTE_CONTENT)).toBeVisible(); // verify that the note content is visible
 
     await page.screenshot({ path: 'screenshots/debug.png' });
+  });
+
+  /**
+   * Scenario: Empty title submission
+   */
+  test.only('create a note with empty string', async ({ page }) => {
+    const createNotePage = new CreateNotePage(page);
+
+    await createNotePage.handleFillNote('', NOTE_CONTENT); // fill note
+
+    // Verify that the note is added
+    /*const noteItem = page.getByTestId('note-item').first(); // start by storing to note item variable
+    await expect(noteItem).toBeVisible(); // verify that the note is visible
+    await expect(noteItem.getByText(NOTE_TITLE)).toBeVisible(); // verify that the note title is visible
+    await expect(noteItem.getByText(NOTE_CONTENT)).toBeVisible(); // verify that the note content is visible*/
+
+    await page.screenshot({ path: 'empty_title.png' });
   });
 });
