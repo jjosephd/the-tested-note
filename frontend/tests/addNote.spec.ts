@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { CreateNotePage } from './pages/notes/createNote.page';
+import { NotesPage } from './pages/notes/notesPage.page';
 
 // data constants
 const NOTE_TITLE = 'My First Note';
@@ -11,9 +11,9 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('AddNote Component', () => {
   test('should allow creating a new note', async ({ page }) => {
-    const createNotePage = new CreateNotePage(page);
+    const notesPage = new NotesPage(page);
 
-    await createNotePage.handleFillNote(NOTE_TITLE, NOTE_CONTENT); // fill note
+    await notesPage.createNote(NOTE_TITLE, NOTE_CONTENT); // fill note
 
     // Verify that the note is added
     const noteItem = page.getByTestId('note-item').first(); // start by storing to note item variable

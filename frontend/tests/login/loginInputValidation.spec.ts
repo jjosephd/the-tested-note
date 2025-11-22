@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { beforeEach } from '../constants';
 import { LoginPage } from '../pages/auth/login.page';
+
+// Reset storage state for this file to ensure tests run in a logged-out state
+test.use({ storageState: { cookies: [], origins: [] } });
 
 // Constants
 const NAV_LINK = 'http://localhost:5173/login'; // default login component
@@ -13,10 +15,12 @@ const EMPTY_PASSWORD = '';
 const INVALID_EMAIL = 'invalidemail';
 const INVALID_PASSWORD = 'inv';
 
+test.beforeEach(async ({ page }) => {
+  await page.goto(NAV_LINK);
+});
+
 //Describe the test
 test.describe('LoginForm component', () => {
-  beforeEach(NAV_LINK);
-
   /**
    * Scenario: Verify login form input fields and button are visible
    * Arrange: render locators
@@ -51,14 +55,13 @@ test.describe('LoginForm component', () => {
   test('Should display error message when email is invalid', async ({
     page,
   }) => {
+    const loginPage = new LoginPage(page);
     const emailInputField = page.getByTestId('email-input'); // render locator
 
-    await emailInputField.fill('invalidemail'); // fill email input with invalid email
+    await loginPage.fillEmailInput('invalidemail'); // fill email input with invalid email
     await expect(emailInputField).toHaveValue('invalidemail'); // verify email input is invalidemail
 
-    await expect(
-      page.getByText('Please enter a valid email address')
-    ).toBeVisible(); // verify error message is visible
+    await expect(loginPage.getEmailErrorMsg()).toBeVisible(); // verify error message is visible
   });
 
   /**
@@ -71,12 +74,13 @@ test.describe('LoginForm component', () => {
   test('Should display error message when password is invalid', async ({
     page,
   }) => {
-    const passwordInputField = page.getByTestId('password-input'); // render locator
+    const loginPage = new LoginPage(page);
+    const passwordInputField = page.getByTestId('inv'); // render locator
 
-    await passwordInputField.fill('inv'); // fill password input with invalid password
+    await loginPage.fillPasswordInput('inv'); // fill password input with invalid password
     await expect(passwordInputField).toHaveValue('inv'); // verify password input is invalidpassword
 
-    await expect(page.getByText('Must be at least 6 characters')).toBeVisible(); // verify error message is visible
+    await expect(loginPage.getPasswordErrorMsg()).toBeVisible(); // verify error message is visible
   });
 
   /**

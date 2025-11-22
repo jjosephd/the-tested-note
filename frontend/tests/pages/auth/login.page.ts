@@ -6,12 +6,20 @@ export class LoginPage {
   readonly emailInputField: Locator;
   readonly passwordInputField: Locator;
   readonly loginButton: Locator;
+  readonly emailInputErrorMsg: Locator;
+  readonly passwordInputErrorMsg: Locator;
 
   constructor(readonly page: Page) {
     this.page = page;
     this.emailInputField = page.getByTestId('email-input');
     this.passwordInputField = page.getByTestId('password-input');
     this.loginButton = page.getByTestId('login-button');
+    this.emailInputErrorMsg = page.getByText(
+      'Please enter a valid email address'
+    );
+    this.passwordInputErrorMsg = page.getByText(
+      'Must be at least 6 characters'
+    );
   }
 
   async fillEmailInput(emailInput: string) {
@@ -35,4 +43,11 @@ export class LoginPage {
     await this.fillPasswordInput(password);
     await this.clickLogin();
   }
+
+  getEmailErrorMsg = () => {
+    return this.emailInputErrorMsg;
+  };
+  getPasswordErrorMsg = () => {
+    return this.passwordInputErrorMsg;
+  };
 }
